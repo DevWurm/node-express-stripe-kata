@@ -1,12 +1,24 @@
 import * as express from 'express';
 import * as cors from 'cors';
 import { NextFunction, Response, Request } from 'express-serve-static-core';
+import { APIRoutes as v1APIRoutes } from './v1/apiRoutes';
+import * as morgan from 'morgan';
+import * as bodyParser from 'body-parser';
 
 // setup express application
-const app = express();
+export const app = express();
 
 // setup Cross-Origin-Resource-Sharing (CORS)
 app.use(cors());
+
+// setup logging
+app.use(morgan('dev'));
+
+// setup parsing for json bodies
+app.use(bodyParser.json());
+
+// API V1 routes
+app.use('/api/v1', v1APIRoutes);
 
 // Handle not matching routes
 app.use(function(req, res, next) {
@@ -17,5 +29,3 @@ app.use(function(req, res, next) {
 app.use((err: any, req: Request, res: Response, next: NextFunction ) => {
   res.status(err.status || 500).json({error: (err.message || 'Internal server error')}).end();
 });
-
-export default app;
