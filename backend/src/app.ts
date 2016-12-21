@@ -27,5 +27,8 @@ app.use(function(req, res, next) {
 
 // Handle Server Errors
 app.use((err: any, req: Request, res: Response, next: NextFunction ) => {
+  if (process.env.NODE_ENV === 'development') {
+    console.error(err);
+  }
   res.status(err.status || 500).json({error: (err.message || 'Internal server error')}).end();
 });
