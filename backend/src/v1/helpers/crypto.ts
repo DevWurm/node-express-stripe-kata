@@ -1,5 +1,6 @@
 import { PasswordHash } from './types';
-import { randomBytes, createHmac} from 'crypto';
+import { randomBytes, createHmac } from 'crypto';
+import { sign } from 'jsonwebtoken';
 
 /**
  * Generates a cryptographic hash
@@ -24,4 +25,21 @@ export function saltHashPassword(password: string, salt: string): PasswordHash {
     salt: salt,
     hash: createHmac('sha512', salt).update(password).digest('hex')
   };
+}
+
+/**
+ * Creates a JSON Web Token which contains the provided email as part of the payload to establish a user session
+ * @param email {string} the email, which is used as payload
+ * @return {string} the JSON Web Token
+ */
+export function createToken(email: string): string {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('No JWT Secret provided');
+  }
+
+  return sign(
+    {email},
+    process.env.JWT_SECRET,
+    { expiresIn: 7 * 24 * 60 * 60 }
+  );
 }
