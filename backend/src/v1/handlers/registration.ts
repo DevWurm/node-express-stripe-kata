@@ -29,7 +29,7 @@ export function registrationHandler(req: Request, res: Response, next: NextFunct
       registerToStripe(req, res)
         .then(id => registerToUserStore(req, res, id))
         .then(() => {
-          res.status(200);
+          res.status(201);
           res.json({});
           next();
         })
@@ -53,9 +53,9 @@ function testForExistence(req: Request, res: Response): Promise<boolean> {
   })
     .then(result => {
       if (result.length > 0) {
-        return Promise.reject(new Error("User already exists"));
+        return Promise.reject(new Error('User already exists'));
       }
-      return Promise.resolve(true);
+      return true;
     });
 }
 
@@ -95,8 +95,8 @@ function registerToUserStore(req: Request, res: Response, stripeId: string): Pro
       email: req.body.email,
       password: saltHashPassword(req.body.password, getSalt()),
       stripeId
-    }).then(res => {
-      return res.insertedId;
+    }).then(result => {
+      return result.insertedId;
     });
   });
 }
