@@ -3,6 +3,7 @@ import { extend, match } from '../helpers/util';
 import { verifyToken } from '../helpers/crypto';
 import { TokenExpired, TokenInvalid } from '../helpers/types';
 import { mongodb, stripe } from '../helpers/providers';
+import { getUserByEmail } from '../helpers/db';
 
 export function getStatusHandler(req: Request & { token?: string }, res: Response, next: NextFunction) {
   return new Promise((resolve, reject) => {
@@ -13,7 +14,6 @@ export function getStatusHandler(req: Request & { token?: string }, res: Respons
 
     const verification = verifyToken(req.token);
 
-    console.log(verification)
     if (match(verification, TokenExpired)) {
       reject(extend(new Error(`Token is expired since ${verification.expiredAt}`), { status: 403 }));
     } else if (match(verification, TokenInvalid)) {
@@ -23,25 +23,11 @@ export function getStatusHandler(req: Request & { token?: string }, res: Respons
       resolve(verification);
     }
   })
-    .then(email => {
-      // get user entry
-      return mongodb.then(db => {
-        return db
-          .find({
-            email: email
-          }).toArray();
-      });
+    .then((email: string) => {
+      return getUserByEmail(email);
     })
-    .then(result => {
-      // get users stripe id
-      if (result.length > 1) {
-        return Promise.reject(extend(new Error('Invalid State: Multiple accounts found'), { status: 500 }));
-      } else if (result.length < 1) {
-        return Promise.reject(extend(new Error('Invalid State: No account found'), { status: 500 }));
-      }
-
-      return result[0].stripeId;
-    })
+    .catch(reason => Promise.reject(extend(reason, {status: 500})))
+    .then(user => user.stripeId)
     .then((stripeId: string) => {
       // get users credits
       return new Promise((resolve, reject) => {

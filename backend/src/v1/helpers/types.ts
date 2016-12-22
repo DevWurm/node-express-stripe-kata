@@ -17,3 +17,9 @@ export class TokenInvalid {
   private tokeninvalid = true; // property for DuckTyping
   constructor(public reason: string) {}
 }
+
+export type DbUser = {
+      email: string,
+      password: PasswordHash,
+      stripeId: string
+}
