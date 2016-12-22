@@ -1,6 +1,6 @@
-import { PasswordHash } from './types';
+import { PasswordHash, JWTVerificationResult, TokenExpired, TokenInvalid } from './types';
 import { randomBytes, createHmac } from 'crypto';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 
 /**
  * Generates a cryptographic hash
@@ -42,4 +42,31 @@ export function createToken(email: string): string {
     process.env.JWT_SECRET,
     { expiresIn: 7 * 24 * 60 * 60 }
   );
+}
+
+/**
+ * Verifies a session token and returns the payload email
+ * @param token {string}
+ * @return {string | TokenExpired | TokenInvalid} The payload email or Error types
+ */
+export function verifyToken(token: string): JWTVerificationResult {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('No JWT Secret provided');
+  }
+
+  let payload: {email: string, exp: any};
+  try {
+    payload = verify(
+      token,
+      process.env.JWT_SECRET,
+    );
+  } catch (e) {
+    if (e.name === 'TokenExpiredError') {
+      return new TokenExpired(e.expiredAt);
+    } else {
+      return new TokenInvalid(e.message);
+    }
+  }
+
+  return payload.email;
 }

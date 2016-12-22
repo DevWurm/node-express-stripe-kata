@@ -4,6 +4,7 @@ import { NextFunction, Response, Request } from 'express-serve-static-core';
 import { APIRoutes as v1APIRoutes } from './v1/apiRoutes';
 import * as morgan from 'morgan';
 import * as bodyParser from 'body-parser';
+const bearerToken = require('express-bearer-token');
 
 // setup express application
 export const app = express();
@@ -16,6 +17,7 @@ app.use(morgan('dev'));
 
 // setup parsing for json bodies
 app.use(bodyParser.json());
+app.use(bearerToken());
 
 // API V1 routes
 app.use('/api/v1', v1APIRoutes);

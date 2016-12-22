@@ -1,4 +1,4 @@
-export function extend<T,U>(first: T, second: U): T & U {
+export function extend<T, U>(first: T, second: U): T & U {
   let result = <T & U>{};
   Object.getOwnPropertyNames(first).forEach(id => {
     (<any>result)[id] = (<any>first)[id];
@@ -10,7 +10,7 @@ export function extend<T,U>(first: T, second: U): T & U {
   return result;
 }
 
-export function match<T>(o: any, ref: {new(): T} | T): o is T  {
+export function match<T>(o: any, ref: {new(...args: any[]): T} | T): o is T  {
   let oObject: Object;
   switch (typeof o) {
     case 'boolean': oObject = new Boolean(o); break;
@@ -24,16 +24,21 @@ export function match<T>(o: any, ref: {new(): T} | T): o is T  {
     return (
       oObject instanceof ref
       ||
-      Object.getOwnPropertyNames(ref.prototype)
+      getPropertyNames(new ref())
         .reduce((acc, curr) => (curr in oObject) && acc, true)
     );
   } else {
     return (
-      Object.getOwnPropertyNames(Object.getPrototypeOf(ref))
+      getPropertyNames(ref)
         .reduce((acc, curr) => (curr in oObject) && acc, true)
     );
   }
 
+}
+
+export function getPropertyNames(x: Object): string[] {
+  return Object.getOwnPropertyNames(x)
+    .concat(Object.getPrototypeOf(x) ? getPropertyNames(Object.getPrototypeOf(x)) : []);
 }
 
 export function isConstructor<T>(x: { new (): T } | T): x is { new (): T } {

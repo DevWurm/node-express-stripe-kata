@@ -12,3 +12,4 @@ export function terminate(req: Request, res: Response, next: NextFunction) {
 
 export * from './registration';
 export * from './session';
+export * from './status';

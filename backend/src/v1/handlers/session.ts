@@ -5,6 +5,12 @@ import { normalizeEmail } from 'validator';
 import { mongodb } from '../helpers/providers';
 import { saltHashPassword, createToken } from '../helpers/crypto';
 
+/**
+ * Express middleware for establishing a user session via a JWT session token
+ * @param req {Request}
+ * @param res {Response}
+ * @param next {NextFunction}
+ */
 export function establishSessionHandler(req: Request, res: Response, next: NextFunction): void {
   // validate user input
   if (!req.body || !isUserCredentials(req.body)) {
