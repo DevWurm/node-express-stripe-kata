@@ -4,5 +4,6 @@ var createHttpServer = require("http").createServer;
 var app = require('../dist/app').app;
 
 // setup server
-createHttpServer(app).listen(process.env.HTTP_PORT || 8080);
-console.log(`Listening on port ${process.env.HTTP_PORT || 8080}`);
+var port = process.env.HTTP_PORT || 8080;
+createHttpServer(app).listen(port);
+console.log("Listening on port "+port);
