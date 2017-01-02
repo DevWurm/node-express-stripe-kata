@@ -1,42 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
+import { ApiService } from './api.service';
 
 @Injectable()
 export class AuthService {
   private loggedIn = false;
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private apiService:ApiService) {
     this.loggedIn = !!localStorage.getItem('auth_token');
+    this.apiService.setToken(localStorage.getItem('auth_token'));
   }
 
-  login(email, password) {
+  login(token:string) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    let token = Math.random().toString(36).slice(2);
 
-    console.log("token: "+token);
     localStorage.setItem('auth_token', token);
     this.loggedIn = true;
 
     return true;
-
-    /*return this.http
-      .post(
-        '/login', 
-        JSON.stringify({ email, password }), 
-        { headers }
-      )
-      .map(res => res.json())
-      .map((res) => {
-        if (res.success) {
-          localStorage.setItem('auth_token', res.auth_token);
-          this.loggedIn = true;
-        }
-
-        return res.success;
-      });*/
   }
-  
+
   logout() {
     localStorage.removeItem('auth_token');
     this.loggedIn = false;

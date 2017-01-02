@@ -8,16 +8,29 @@ import { ApiService } from '../shared/api.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  user : User = new User(null, null);
+  private user : User = new User(null, null);
+  private notification:string;
 
   constructor(private apiService:ApiService) { }
 
   ngOnInit() {
   }
 
-  register(email:string, passwd:string) {
-    console.log("register");
-    this.user = new User(email, passwd);
-    this.apiService.registerUser(this.user);
+  register(email:string, passwd:string, passwdAgain:string) {
+    if(passwd == passwdAgain) {
+      this.user = new User(email, passwd);
+
+      this.apiService.registerUser(this.user).subscribe(
+        user  => this.showNotification("User with email "+this.user.email+" created!", 3000),
+        error =>  this.showNotification("Error: "+error, 5000));
+    } else {
+      this.showNotification("Error: Passwords not equal!", 5000);
+    }
+
+  }
+
+  showNotification(msg:string, duration:number) {
+    this.notification=msg;
+    setTimeout(() => this.notification = "", duration);
   }
 }
