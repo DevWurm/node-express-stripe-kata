@@ -4,29 +4,29 @@ import { ApiService } from './api.service';
 
 @Injectable()
 export class AuthService {
-  private loggedIn = false;
+  private _token:string;
 
-  constructor(private http: Http, private apiService:ApiService) {
-    this.loggedIn = !!localStorage.getItem('auth_token');
-    this.apiService.setToken(localStorage.getItem('auth_token'));
+  constructor() {
+    this._token = localStorage.getItem('auth_token');
   }
 
   login(token:string) {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    this._token = token;
 
     localStorage.setItem('auth_token', token);
-    this.loggedIn = true;
 
     return true;
   }
 
   logout() {
     localStorage.removeItem('auth_token');
-    this.loggedIn = false;
   }
 
   isLoggedIn() {
-    return this.loggedIn;
+    return Boolean(localStorage.getItem('auth_token'));
+  }
+
+  get token(): string {
+    return this._token;
   }
 }

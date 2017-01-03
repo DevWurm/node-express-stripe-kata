@@ -2,16 +2,16 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user';
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import { Observable, AsyncSubject } from 'rxjs';
+import { AuthService } from './auth.service';
 
 
 @Injectable()
 export class ApiService {
-  private port = process.env.HTTP_PORT || 4300;
+  private port = 4300;
 
   private apiUrl = 'http://localhost:'+this.port+'/api/v1';  // URL to web api
-  private currentToken:string;
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private authService:AuthService) { }
 
   registerUser(user:User): Observable<User> {
     let headers = new Headers({'Content-Type': 'application/json'});
@@ -32,9 +32,8 @@ export class ApiService {
 
   doPayment(amount:string, token:string): Observable<any> {
     let headers = new Headers({'Content-Type': 'application/json'});
-    headers.append("Authorization", "Bearer "+this.currentToken);
+    headers.append("Authorization", "Bearer "+this.authService.token);
     let options = new RequestOptions({ headers: headers });
-    console.log("sess "+this.currentToken);
 
     return this.http.post(this.apiUrl+'/payment', {token: token, amount:amount}, options)
       .map(this.extractData)
@@ -57,10 +56,5 @@ export class ApiService {
   private extractData(res: Response) {
     let body = res.json();
     return body.data || { };
-  }
-
-  public setToken(token:string) {
-    this.currentToken = token;
-    console.log("Setting token to "+this.currentToken);
   }
 }

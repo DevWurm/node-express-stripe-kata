@@ -26,8 +26,6 @@ export class LoginComponent implements OnInit {
     this.apiService.login(email, password)
       .subscribe(
         token => {
-          console.log("toki "+token.json().token);
-          this.apiService.setToken(token.json().token);
           if(this.authService.login(token.json().token)) {
             this.router.navigate(['']);
           }  else {

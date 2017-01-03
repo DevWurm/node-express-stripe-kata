@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../shared/auth.service';
-import { Router } from '@angular/router';
 import { ApiService } from '../shared/api.service';
 
 @Component({
@@ -17,13 +15,7 @@ export class PaymentComponent implements OnInit {
   cvc: string = "123";
   amount:string = "500";
 
-  constructor(private authService: AuthService, private router: Router, private apiService:ApiService/*, private location:Location*/) {
-    /*if (!authService.isLoggedIn()) {
-      //this.location.replaceState('/'); // clears browser history so they can't navigate with back button
-      console.log("navigate to login...");
-      this.router.navigate(['login']);
-    }*/
-
+  constructor(private apiService:ApiService) {
   }
 
   ngOnInit() {
