@@ -1,4 +1,4 @@
-#!/usr/bin env node
+#!/usr/bin/env node
 
 var stripe = require("stripe")(
     process.env.STRIPE_SECRET_KEY

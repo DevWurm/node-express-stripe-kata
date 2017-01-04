@@ -1,4 +1,4 @@
-#!/usr/bin env node
+#!/usr/bin/env node
 var createHttpServer = require("http").createServer;
 
 var app = require('../dist/app').app;
