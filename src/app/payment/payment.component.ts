@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../shared/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment',
@@ -8,7 +9,7 @@ import { ApiService } from '../shared/api.service';
 })
 export class PaymentComponent implements OnInit {
   private notification: string;
-  private credits:number;
+  private credits: number;
 
   cardNumber: string;
   expiryMonth: string;
@@ -20,6 +21,10 @@ export class PaymentComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.updateCredits();
+  }
+
+  updateCredits() {
     this.apiService.getCredits().subscribe(
       credits => this.credits = credits.json().credits,
       error => this.showNotification("Error: " + error, 5000));
@@ -36,7 +41,10 @@ export class PaymentComponent implements OnInit {
     }, (status: number, response: any) => {
       if (status === 200) {
         this.apiService.doPayment(this.amount, response.id).subscribe(
-          user => this.showNotification("Payment successfully!", 3000),
+          user => {
+            this.showNotification("Payment successfully!", 3000);
+            this.updateCredits();
+          },
           error => this.showNotification("Error: " + error, 5000));
       } else {
         this.showNotification("Error: " + response.error.message, 5000);

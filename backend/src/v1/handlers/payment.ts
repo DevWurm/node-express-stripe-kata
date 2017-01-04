@@ -63,6 +63,11 @@ export function paymentHandler(req: Request & { token: string }, res: Response, 
           })
           .then((customer: { id: string, metadata: { credits: number } }) => {
             // update user data at stripe
+            console.log(customer.metadata.credits);
+            console.log("--");
+            console.log(amount);
+            console.log("--");
+            console.log(Number(customer.metadata.credits) + Number(amount));
             return new Promise((resolve, reject) => {
               stripe.customers.update(
                 customer.id,
