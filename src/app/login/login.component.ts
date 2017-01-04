@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(email, password) {
-    console.log("Login: " + email + password);
+    console.log('Login: ' + email + password);
 
     this.authService.login(email, password)
       .subscribe(
@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
 
   showNotification(msg: string, duration: number) {
     this.notification = msg;
-    setTimeout(() => this.notification = "", duration);
+    setTimeout(() => this.notification = '', duration);
   }
 
 }

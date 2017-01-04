@@ -5,7 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { PaymentComponent } from './payment/payment.component';
 import { LoggedInGuard } from './shared/logged-in.guard';
 
-//noinspection TypeScriptUnresolvedVariable
+// noinspection TypeScriptUnresolvedVariable
 const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },

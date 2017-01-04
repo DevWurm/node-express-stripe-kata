@@ -33,7 +33,7 @@ export class ApiService {
 
   doPayment(amount: number, token: string): Observable<void> {
     const headers = new Headers({ 'Content-Type': 'application/json' });
-    headers.append("Authorization", "Bearer " + this.tokenService.token);
+    headers.append('Authorization', 'Bearer ' + this.tokenService.token);
     const options = new RequestOptions({ headers: headers });
 
     return this.http.post(this.apiUrl + '/payment', { token: token, amount: amount }, options)
@@ -43,7 +43,7 @@ export class ApiService {
 
   getCredits(): Observable<number> {
     const headers = new Headers({ 'Content-Type': 'application/json' });
-    headers.append("Authorization", "Bearer " + this.tokenService.token);
+    headers.append('Authorization', 'Bearer ' + this.tokenService.token);
     const options = new RequestOptions({ headers: headers });
 
     return this.http.get(this.apiUrl + '/status', options)

@@ -24,7 +24,7 @@ export class StripeService {
         if (status === 200) {
           requestSubject.next(response.id);
         } else {
-          requestSubject.error("Error: " + response.error.message);
+          requestSubject.error('Error: ' + response.error.message);
         }
       });
     });

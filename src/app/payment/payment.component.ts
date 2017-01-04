@@ -27,16 +27,19 @@ export class PaymentComponent implements OnInit {
   updateCredits() {
     this.apiService.getCredits().subscribe(
       credits => this.credits = credits,
-      error => this.showNotification("Error: " + error, 5000));
+      error => this.showNotification('Error: ' + error, 5000));
   }
 
   onSubmit() {
-    this.notification = "Processing...";
+    this.notification = 'Processing...';
 
     this.stripeService.createCardToken(this.cardNumber, this.expiryMonth, this.expiryYear, this.cvc)
       .flatMap(token => this.stripeService.doPayment(token, this.amount))
       .subscribe(
-        _ => {console.log("here"); this.updateCredits(); this.showNotification('Payment succeeded', 3000)},
+        _ => {
+          this.updateCredits();
+          this.showNotification('Payment succeeded', 3000);
+        },
         err => this.showNotification(`Error: ${err}`, 5000)
       );
 
@@ -45,7 +48,7 @@ export class PaymentComponent implements OnInit {
   showNotification(msg: string, duration: number) {
     this.notification = msg;
     setTimeout(() => {
-      this.notification = "";
+      this.notification = '';
     }, duration);
   }
 
