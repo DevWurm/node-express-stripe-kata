@@ -1,32 +1,36 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
 import { ApiService } from './api.service';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { User } from '../models/user';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
-  private _token:string;
 
-  constructor() {
-    this._token = localStorage.getItem('auth_token');
+  constructor(private apiService: ApiService, private tokenService: TokenService, private router: Router) {
   }
 
-  login(token:string) {
-    this._token = token;
+  register(email: string, password: string): Observable<void> {
+    return this.apiService.registerUser(new User(email, password)).flatMap(_ => this.login(email, password));
+  }
 
-    localStorage.setItem('auth_token', token);
-
-    return true;
+  login(email: string, password: string): Observable<void> {
+    return this.apiService.login(email, password)
+      .do(
+        token => {
+          this.tokenService.token = token;
+          this.router.navigate(['']);
+        }
+      )
+      .map(_ => null);
   }
 
   logout() {
-    localStorage.removeItem('auth_token');
+    this.tokenService.deleteToken();
   }
 
   isLoggedIn() {
-    return Boolean(localStorage.getItem('auth_token'));
-  }
-
-  get token(): string {
-    return this._token;
+    return Boolean(this.tokenService.token);
   }
 }

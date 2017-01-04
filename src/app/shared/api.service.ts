@@ -1,55 +1,57 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
-import { Observable, AsyncSubject } from 'rxjs';
-import { AuthService } from './auth.service';
+import { Observable } from 'rxjs';
+import { environment as env } from '../../environments/environment';
+import { TokenService } from './token.service';
 
 
 @Injectable()
 export class ApiService {
-  private port = 4300;
+  private apiUrl = `${env.apiSchema || 'http'}://${env.apiHost || 'localhost'}:${env.apiPort || 8080}/${env.apiPrefix || ''}`;
 
-  private apiUrl = 'http://localhost:'+this.port+'/api/v1';  // URL to web api
+  constructor(private http: Http, private tokenService: TokenService) {
+  }
 
-  constructor(private http: Http, private authService:AuthService) { }
-
-  registerUser(user:User): Observable<User> {
-    const headers = new Headers({'Content-Type': 'application/json'});
+  registerUser(user: User): Observable<void> {
+    const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
 
-    return this.http.post(this.apiUrl+'/user', JSON.stringify(user), options)
-      .map(this.extractData)
+    return this.http.post(this.apiUrl + '/user', JSON.stringify(user), options)
+      .map(_ => null)
       .catch(this.handleError);
   }
 
-  login(email:string, passwd:string): Observable<Response> {
-    const headers = new Headers({'Content-Type': 'application/json'});
+  login(email: string, passwd: string): Observable<string> {
+    const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });
 
-    return this.http.post(this.apiUrl+'/session', {email:email, password:passwd}, options)
+    return this.http.post(this.apiUrl + '/session', { email: email, password: passwd }, options)
+      .map(res => res.json().token)
       .catch(this.handleError);
   }
 
-  doPayment(amount:number, token:string): Observable<any> {
-    const headers = new Headers({'Content-Type': 'application/json'});
-    headers.append("Authorization", "Bearer "+this.authService.token);
+  doPayment(amount: number, token: string): Observable<void> {
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    headers.append("Authorization", "Bearer " + this.tokenService.token);
     const options = new RequestOptions({ headers: headers });
 
-    return this.http.post(this.apiUrl+'/payment', {token: token, amount:amount}, options)
-      .map(this.extractData)
+    return this.http.post(this.apiUrl + '/payment', { token: token, amount: amount }, options)
+      .map(_ => null)
       .catch(this.handleError);
   }
 
-  getCredits(): Observable<Response> {
-    const headers = new Headers({'Content-Type': 'application/json'});
-    headers.append("Authorization", "Bearer "+this.authService.token);
+  getCredits(): Observable<number> {
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    headers.append("Authorization", "Bearer " + this.tokenService.token);
     const options = new RequestOptions({ headers: headers });
 
-    return this.http.get(this.apiUrl+'/status', options)
+    return this.http.get(this.apiUrl + '/status', options)
+      .map(res => res.json().credits)
       .catch(this.handleError);
   }
 
-  private handleError (error: Response | any) {
+  private handleError(error: Response | any) {
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
@@ -60,10 +62,5 @@ export class ApiService {
     }
     console.error(errMsg);
     return Observable.throw(errMsg);
-  }
-
-  private extractData(res: Response) {
-    let body = res.json();
-    return body.data || { };
   }
 }
