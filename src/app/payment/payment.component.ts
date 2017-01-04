@@ -10,11 +10,11 @@ export class PaymentComponent implements OnInit {
   private notification: string;
   private credits:number;
 
-  cardNumber: string = "4242424242424242";
-  expiryMonth: string = "12";
-  expiryYear: string = "2017";
-  cvc: string = "123";
-  amount: number = 500;
+  cardNumber: string;
+  expiryMonth: string;
+  expiryYear: string;
+  cvc: string;
+  amount: number;
 
   constructor(private apiService: ApiService, private changeDetector: ChangeDetectorRef) {
   }
