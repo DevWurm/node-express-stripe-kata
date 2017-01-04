@@ -68,7 +68,7 @@ export function paymentHandler(req: Request & { token: string }, res: Response, 
                 customer.id,
                 {
                   metadata: {
-                    credits: customer.metadata.credits + amount
+                    credits: Number(customer.metadata.credits) + Number(amount)
                   }
                 },
                 (err, _) => {
