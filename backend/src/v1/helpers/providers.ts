@@ -6,7 +6,7 @@ const e = process.env;
 export const stripe: any = stripe_gen(e.STRIPE_SECRET_KEY);
 
 export const mongodb: Promise<Collection> = MongoClient
-  .connect(`mongodb://`
+  .connect(`mongodb://${e.MONGODB_USER}:${e.MONGODB_PASS}@`
     + `${e.MONGODB_ADDR}:${e.MONGODB_PORT || 27017}`
     + `/${e.MONGODB_DB}`)
   .then(db => {
