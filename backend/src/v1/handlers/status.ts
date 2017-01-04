@@ -4,6 +4,7 @@ import { verifyToken } from '../helpers/crypto';
 import { TokenExpired, TokenInvalid } from '../helpers/types';
 import { mongodb, stripe } from '../helpers/providers';
 import { getUserByEmail } from '../helpers/db';
+import { getCustomer } from '../helpers/stripe';
 
 export function getStatusHandler(req: Request & { token?: string }, res: Response, next: NextFunction) {
   return new Promise((resolve, reject) => {
@@ -28,19 +29,8 @@ export function getStatusHandler(req: Request & { token?: string }, res: Respons
     })
     .catch(reason => Promise.reject(extend(reason, {status: 500})))
     .then(user => user.stripeId)
-    .then((stripeId: string) => {
-      // get users credits
-      return new Promise((resolve, reject) => {
-        stripe.customers.retrieve(stripeId, (err, customer) => {
-          if (err) {
-            console.error(err);
-            return reject(extend(new Error('Error while receiving user from payment service'), {status: 500}));
-          }
-
-          resolve(Number(customer.metadata.credits));
-        });
-      });
-    })
+    .then((stripeId: string) => getCustomer(stripeId))
+    .then(customer => customer.metadata.credits)
     .then(credits => {
       res.status(200);
       res.json({credits});
