@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../shared/auth.service';
 import { Router } from '@angular/router';
-import { ApiService } from '../shared/api.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -9,10 +9,10 @@ import { ApiService } from '../shared/api.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  private notification:string;
+  private notification: string;
 
-  constructor(private authService: AuthService, private router: Router, private apiService:ApiService) {
-    if(this.authService.isLoggedIn()) {
+  constructor(private authService: AuthService, private router: Router) {
+    if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
   }
@@ -21,23 +21,19 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(email, password) {
-    console.log("Login: "+email+password);
+    console.log("Login: " + email + password);
 
-    this.apiService.login(email, password)
+    this.authService.login(email, password)
       .subscribe(
-        token => {
-          if(this.authService.login(token.json().token)) {
-            this.router.navigate(['']);
-          }  else {
-            this.showNotification("Authentication failed", 5000)
-          }
-        },
-        error => this.showNotification("Error: "+error, 5000)
-    );
+        _ => null,
+        _ => {
+        this.showNotification('Login failed', 5000);
+        return Observable.throw(false);
+      });
   }
 
-  showNotification(msg:string, duration:number) {
-    this.notification=msg;
+  showNotification(msg: string, duration: number) {
+    this.notification = msg;
     setTimeout(() => this.notification = "", duration);
   }
 

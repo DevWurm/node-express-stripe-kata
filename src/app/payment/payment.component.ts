@@ -1,6 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../shared/api.service';
-import { Router } from '@angular/router';
+import { StripeService } from '../shared/stripe.service';
 
 @Component({
   selector: 'app-payment',
@@ -17,7 +17,7 @@ export class PaymentComponent implements OnInit {
   cvc: string;
   amount: number;
 
-  constructor(private apiService: ApiService, private changeDetector: ChangeDetectorRef) {
+  constructor(private apiService: ApiService, private stripeService: StripeService) {
   }
 
   ngOnInit() {
@@ -26,40 +26,27 @@ export class PaymentComponent implements OnInit {
 
   updateCredits() {
     this.apiService.getCredits().subscribe(
-      credits => this.credits = credits.json().credits,
+      credits => this.credits = credits,
       error => this.showNotification("Error: " + error, 5000));
   }
 
   onSubmit() {
     this.notification = "Processing...";
 
-    (<any>window).Stripe.card.createToken({
-      number: this.cardNumber,
-      exp_month: this.expiryMonth,
-      exp_year: this.expiryYear,
-      cvc: this.cvc
-    }, (status: number, response: any) => {
-      if (status === 200) {
-        this.apiService.doPayment(this.amount, response.id).subscribe(
-          user => {
-            this.showNotification("Payment successfully!", 3000);
-            this.updateCredits();
-          },
-          error => this.showNotification("Error: " + error, 5000));
-      } else {
-        this.showNotification("Error: " + response.error.message, 5000);
-      }
-    });
+    this.stripeService.createCardToken(this.cardNumber, this.expiryMonth, this.expiryYear, this.cvc)
+      .flatMap(token => this.stripeService.doPayment(token, this.amount))
+      .subscribe(
+        _ => {console.log("here"); this.updateCredits(); this.showNotification('Payment succeeded', 3000)},
+        err => this.showNotification(`Error: ${err}`, 5000)
+      );
+
   }
 
   showNotification(msg: string, duration: number) {
     this.notification = msg;
     setTimeout(() => {
       this.notification = "";
-      this.changeDetector.detectChanges();
     }, duration);
-
-    this.changeDetector.detectChanges();
   }
 
 }

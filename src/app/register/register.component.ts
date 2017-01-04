@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../models/user';
-import { ApiService } from '../shared/api.service';
+import { AuthService } from '../shared/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -8,29 +8,27 @@ import { ApiService } from '../shared/api.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  private user : User;
-  private notification:string;
+  private notification: string;
 
-  constructor(private apiService:ApiService) { }
+  constructor(private authService: AuthService) {
+  }
 
   ngOnInit() {
   }
 
-  register(email:string, passwd:string, passwdAgain:string) {
-    if(passwd == passwdAgain) {
-      this.user = new User(email, passwd);
-
-      this.apiService.registerUser(this.user).subscribe(
-        user  => this.showNotification("User with email "+this.user.email+" created!", 3000),
-        error =>  this.showNotification("Error: "+error, 5000));
+  register(email: string, password: string, passwordAgain: string) {
+    if (password == passwordAgain) {
+      this.authService.register(email, password).subscribe(
+        _ => this.showNotification("User created!", 3000),
+        error => this.showNotification("Error: " + error, 5000));
     } else {
       this.showNotification("Error: Passwords not equal!", 5000);
     }
 
   }
 
-  showNotification(msg:string, duration:number) {
-    this.notification=msg;
+  showNotification(msg: string, duration: number) {
+    this.notification = msg;
     setTimeout(() => this.notification = "", duration);
   }
 }
