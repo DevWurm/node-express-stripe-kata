@@ -1,9 +1,4 @@
 export class User {
-    email: string;
-    password: string;
-
-  constructor(email:string, passwd:string) {
-    this.email = email;
-    this.password = passwd;
+  constructor(public readonly email:string, public readonly password:string) {
   }
 }
