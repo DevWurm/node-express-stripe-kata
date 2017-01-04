@@ -11,6 +11,8 @@ import { PaymentModule } from './payment/payment.module';
 import { LoggedInGuard } from './shared/logged-in.guard';
 import { AuthService } from './shared/auth.service';
 import { ApiService } from './shared/api.service';
+import { TokenService } from './shared/token.service';
+import { StripeService } from './shared/stripe.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,7 @@ import { ApiService } from './shared/api.service';
     LoginModule,
     PaymentModule
   ],
-  providers: [ApiService, AuthService,LoggedInGuard],
+  providers: [ApiService, AuthService, TokenService, StripeService, LoggedInGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
