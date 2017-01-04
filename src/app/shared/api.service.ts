@@ -30,13 +30,22 @@ export class ApiService {
       .catch(this.handleError);
   }
 
-  doPayment(amount:string, token:string): Observable<any> {
+  doPayment(amount:number, token:string): Observable<any> {
     const headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", "Bearer "+this.authService.token);
     const options = new RequestOptions({ headers: headers });
 
     return this.http.post(this.apiUrl+'/payment', {token: token, amount:amount}, options)
       .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  getCredits(): Observable<Response> {
+    const headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", "Bearer "+this.authService.token);
+    const options = new RequestOptions({ headers: headers });
+
+    return this.http.get(this.apiUrl+'/status', options)
       .catch(this.handleError);
   }
 

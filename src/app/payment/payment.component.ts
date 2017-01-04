@@ -8,17 +8,21 @@ import { ApiService } from '../shared/api.service';
 })
 export class PaymentComponent implements OnInit {
   private notification: string;
+  private credits:number;
 
   cardNumber: string = "4242424242424242";
   expiryMonth: string = "12";
   expiryYear: string = "2017";
   cvc: string = "123";
-  amount: string = "500";
+  amount: number = 500;
 
   constructor(private apiService: ApiService, private changeDetector: ChangeDetectorRef) {
   }
 
   ngOnInit() {
+    this.apiService.getCredits().subscribe(
+      credits => this.credits = credits.json().credits,
+      error => this.showNotification("Error: " + error, 5000));
   }
 
   onSubmit() {
