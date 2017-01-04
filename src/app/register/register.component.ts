@@ -8,7 +8,7 @@ import { ApiService } from '../shared/api.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  private user : User = new User(null, null);
+  private user : User;
   private notification:string;
 
   constructor(private apiService:ApiService) { }

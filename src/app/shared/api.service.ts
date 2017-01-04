@@ -14,8 +14,8 @@ export class ApiService {
   constructor(private http: Http, private authService:AuthService) { }
 
   registerUser(user:User): Observable<User> {
-    let headers = new Headers({'Content-Type': 'application/json'});
-    let options = new RequestOptions({ headers: headers });
+    const headers = new Headers({'Content-Type': 'application/json'});
+    const options = new RequestOptions({ headers: headers });
 
     return this.http.post(this.apiUrl+'/user', JSON.stringify(user), options)
       .map(this.extractData)
@@ -23,17 +23,17 @@ export class ApiService {
   }
 
   login(email:string, passwd:string): Observable<Response> {
-    let headers = new Headers({'Content-Type': 'application/json'});
-    let options = new RequestOptions({ headers: headers });
+    const headers = new Headers({'Content-Type': 'application/json'});
+    const options = new RequestOptions({ headers: headers });
 
     return this.http.post(this.apiUrl+'/session', {email:email, password:passwd}, options)
       .catch(this.handleError);
   }
 
   doPayment(amount:string, token:string): Observable<any> {
-    let headers = new Headers({'Content-Type': 'application/json'});
+    const headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", "Bearer "+this.authService.token);
-    let options = new RequestOptions({ headers: headers });
+    const options = new RequestOptions({ headers: headers });
 
     return this.http.post(this.apiUrl+'/payment', {token: token, amount:amount}, options)
       .map(this.extractData)
