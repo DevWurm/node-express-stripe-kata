@@ -1,0 +1,10 @@
+<h1>Register</h1>
+
+<form #registerForm="ngForm" (ngSubmit)="register(user.value, passwd.value, passwdAgain.value)">
+  E-mail address: <input #user="ngModel" name="user" type="text" [(ngModel)]="user.email" required /><br />
+  Pasword: <input #passwd="ngModel" name="passwd" type="password" ngModel required /><br />
+  Pasword again: <input #passwdAgain="ngModel" name="passwdAgain" ngModel type="password" required /><br />
+  <input type="submit" /><br />
+</form>
+<br />
+{{notification}}

@@ -1,0 +1,9 @@
+<h1>Login</h1>
+
+<a [routerLink]="['/register']" routerLinkActive="active">Register</a>
+
+<form>
+  User: <input #user type="text" /><br />
+  Password: <input #passwd type="text" /><br />
+  <input type="button" value="Einloggen" (click)="onSubmit(user.value, passwd.value)" /><br />
+</form>

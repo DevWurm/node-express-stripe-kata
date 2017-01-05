@@ -4,5 +4,12 @@
 // The list of which env maps to which file can be found in `angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+
+  apiSchema: 'http',
+  apiHost: 'localhost',
+  apiPort: 8080,
+  apiPrefix: 'api/v1',
+
+  stripePubKey: 'YOUR_PUB_KEY'
 };
