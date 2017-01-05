@@ -2,7 +2,6 @@ import { Response, Request, NextFunction } from 'express-serve-static-core';
 import { isUserCredentials } from '../helpers/types';
 import { extend } from '../helpers/util';
 import { normalizeEmail } from 'validator';
-import { mongodb } from '../helpers/providers';
 import { saltHashPassword, createToken } from '../helpers/crypto';
 import { getUserByEmail } from '../helpers/db';
 

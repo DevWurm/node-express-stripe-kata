@@ -55,7 +55,7 @@ function testForExistence(req: Request, res: Response): Promise<boolean> {
       if (result.length > 0) {
         return Promise.reject(new Error('User already exists'));
       }
-      return true;
+      return Promise.resolve(true);
     });
 }
 
