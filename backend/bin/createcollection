@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+const MongoClient = require('mongodb').MongoClient;
+
+const e = process.env;
+
+MongoClient
+  .connect(`mongodb://${e.MONGODB_USER}:${e.MONGODB_PASS}@`
+    + `${e.MONGODB_ADDR}:${e.MONGODB_PORT || 27017}`
+    + `/${e.MONGODB_DB}`)
+  .then(db => {
+    return db.createCollection(e.MONGODB_COLLECTION);
+  })
+  .then((_) => console.log(`Collection ${e.MONGODB_COLLECTION} created`))
+  .catch(reason => console.log("Creation failed: ", reason));

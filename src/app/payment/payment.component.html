@@ -1,0 +1,42 @@
+<app-navigation></app-navigation>
+<br />
+
+Credits: {{credits}}<br />
+
+<form action="" method="POST" id="payment-form" (submit)="onSubmit()">
+  <span class="payment-message"></span>
+
+  <div class="form-row">
+    <label>
+      <span>Card Number</span>
+      <input [(ngModel)]="cardNumber" name="card-number" type="text" size="20">
+    </label>
+  </div>
+
+  <div class="form-row">
+    <label>
+      <span>Expiration (MM/YY)</span>
+      <input [(ngModel)]="expiryMonth" name="expiry-month" type="text" size="2">
+    </label>
+    <span> / </span>
+    <input [(ngModel)]="expiryYear" name="expiry-year" type="text" size="2">
+  </div>
+
+  <div class="form-row">
+    <label>
+      <span>CVC</span>
+      <input [(ngModel)]="cvc" name="cvc" type="text" size="4">
+    </label>
+  </div>
+
+  <div class="form-row">
+    <label>
+      <span>Amount</span>
+      <input [(ngModel)]="amount" name="amount" type="text" size="4">
+    </label>
+  </div>
+
+  <input type="submit" value="Submit Payment">
+</form>
+
+{{notification}}
