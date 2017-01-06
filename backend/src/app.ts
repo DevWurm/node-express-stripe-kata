@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 app.use(bearerToken());
 
 // API V1 routes
-// TODO: Mount the V1 API Routes
+app.use('/api/v1', v1APIRoutes);
 
 // Handle not matching routes
 app.use(function(req, res, next) {
@@ -28,4 +28,9 @@ app.use(function(req, res, next) {
 });
 
 // Handle Server Errors
-// TODO: Add handler for faulty requests
+app.use((err: any, req: Request, res: Response, next: NextFunction ) => {
+  if (process.env.NODE_ENV === 'development') {
+    console.error(err);
+  }
+  res.status(err.status || 500).json({error: (err.message || 'Internal server error')}).end();
+});
