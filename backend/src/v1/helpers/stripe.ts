@@ -2,22 +2,7 @@ import { stripe } from './providers';
 import { extend } from './util';
 
 export function createCharge(amount, token, email): Promise<number> {
-  return new Promise((resolve, reject) => {
-    // charge customer
-    stripe.charges.create({
-      amount: amount,
-      currency: "eur",
-      source: token, // obtained with Stripe.js
-      description: `Credit charge for ${email}`
-    }, (err, charge) => {
-      if (err) {
-        console.error(err);
-        return reject(extend(new Error('Error while charging credit card'), { status: 500 }));
-      }
-
-      resolve(charge.amount);
-    });
-  });
+  // TODO: charge the provided token and return the charged amount as promise
 }
 
 export function getCustomer(id: string): Promise<any> {

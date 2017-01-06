@@ -1,0 +1,7 @@
+Welcome to Task 3
+=================
+
+In this task you will charge credit cards using Stripe.
+
+Because we all want $$$ please implement the communication with stripe in the frontend (src/app/shared/stripe.service.ts) as well
+as in the backend (backend/src/v1/helpers/stripe.ts).
