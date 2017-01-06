@@ -14,3 +14,4 @@ export * from './registration';
 export * from './session';
 export * from './status';
 export * from './payment';
+export * from './version';

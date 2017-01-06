@@ -1,0 +1,3 @@
+version: 1.0.0
+project: Payment Manager
+date: 2017-01-06
