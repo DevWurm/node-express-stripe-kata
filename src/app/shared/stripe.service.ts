@@ -14,7 +14,20 @@ export class StripeService {
 
     (<any>window).Stripe.setPublishableKey(env.stripePubKey);
 
-    // TODO: Create the card token and emit it via the requestSubject
+    (<any>window).Stripe.card.createToken({
+      number: cardNumber,
+      exp_month: expiryMonth,
+      exp_year: expiryYear,
+      cvc: cvc
+    }, (status: number, response: any) => {
+      this.zone.run(() => {
+        if (status === 200) {
+          requestSubject.next(response.id);
+        } else {
+          requestSubject.error('Error: ' + response.error.message);
+        }
+      });
+    });
 
     return requestSubject;
   }
