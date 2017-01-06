@@ -1,8 +1,0 @@
-Welcome to task 1
-=================
-
-In this task you have to deal with basic Node.js concerns like the Node core library, async I/O and Promises.
-
-For our API server we need a route, which gives information about the servers version. For a mysterious reason these information are stored
-in a file somewhere in the filesystem (backend/manifest/v1.txt) in an absurd file format m(. We need a function, which reads the file and
-parses it to an Object. Have a look at backend/src/v1/helpers/manifest.ts.
