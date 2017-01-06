@@ -1,0 +1,9 @@
+Welcome to Task 2
+=================
+
+In this task you have to deal with the basics of Express.
+
+We now want to set up our version endpoint to receive the information from the API Server.
+To do so, implement the request handler in backend/src/v1/handlers/version.ts and include it into the route tree in backend/src/v1/apiRoutes.ts.
+
+For any reason some moron unmounted the whole route tree from the application and removed the error handler. Please fix this in backend/src/app.ts.
