@@ -2,6 +2,14 @@
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.20-4.
 
+## Required environment variables
++ `STRIPE_SECRET_KEY`
++ `MONGODB_USER`
++ `MONGODB_PASS`
++ `MONGODB_ADDR`
++ `MONGODB_COLLECTION`
++ `JWT_SECRET`
+
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
